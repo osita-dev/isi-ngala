@@ -38,13 +38,17 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ user: users[0], isAuthenticated: true, isMinor: false });
   },
   signup: () => {
-    set((state) => ({
-      user: users[0],
-      isAuthenticated: true,
-      isMinor: state.signupData.isMinor ?? false,
-      signupStep: 0,
-      signupData: {},
-    }));
+    set((state) => {
+      const minor = state.signupData.isMinor ?? false;
+      console.log("SIGNUP - signupData:", JSON.stringify(state.signupData), "isMinor:", minor);
+      return {
+        user: users[0],
+        isAuthenticated: true,
+        isMinor: minor,
+        signupStep: 0,
+        signupData: {},
+      };
+    });
   },
   logout: () => {
     set({ user: null, isAuthenticated: false, isMinor: false });
