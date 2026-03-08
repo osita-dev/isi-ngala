@@ -60,6 +60,7 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
 
 const Marketplace = () => {
   const navigate = useNavigate();
+  const { isMinor } = useAuthStore();
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -82,8 +83,6 @@ const Marketplace = () => {
 
     return matchSearch && matchCategory && matchSection;
   });
-
-  const { isMinor } = useAuthStore();
 
   if (isMinor) {
     return (
