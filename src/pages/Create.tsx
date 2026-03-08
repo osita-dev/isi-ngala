@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Camera, Video, X } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { toast } from "sonner";
 
@@ -8,6 +9,7 @@ const MAX_FILE_SIZE_MB = 100;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 const Create = () => {
+  const navigate = useNavigate();
   const [caption, setCaption] = useState("");
   const [hairType, setHairType] = useState("");
   const [tags, setTags] = useState("");
@@ -36,7 +38,13 @@ const Create = () => {
       toast.error("Please write something to share!");
       return;
     }
-    toast.success("Post shared! 🎉");
+    const newPostId = "post-" + Date.now();
+    toast.success("Post shared! 🎉", {
+      action: {
+        label: "View",
+        onClick: () => navigate(`/post/${newPostId}`),
+      },
+    });
     setCaption("");
     setHairType("");
     setTags("");
