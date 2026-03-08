@@ -13,9 +13,18 @@ const interests = [
 ];
 
 const countries = [
-  "Nigeria", "South Africa", "Kenya", "Ghana", "Tanzania", "Ethiopia",
-  "Uganda", "Cameroon", "Senegal", "Côte d'Ivoire", "Zimbabwe", "Mozambique",
-  "United States", "United Kingdom", "Canada", "Jamaica", "Brazil", "Other",
+  // African countries
+  "Algeria", "Angola", "Benin", "Botswana", "Burkina Faso", "Burundi",
+  "Cabo Verde", "Cameroon", "Central African Republic", "Chad", "Comoros",
+  "Congo (Brazzaville)", "Congo (DRC)", "Côte d'Ivoire", "Djibouti", "Egypt",
+  "Equatorial Guinea", "Eritrea", "Eswatini", "Ethiopia", "Gabon", "Gambia",
+  "Ghana", "Guinea", "Guinea-Bissau", "Kenya", "Lesotho", "Liberia", "Libya",
+  "Madagascar", "Malawi", "Mali", "Mauritania", "Mauritius", "Morocco",
+  "Mozambique", "Namibia", "Niger", "Nigeria", "Rwanda", "São Tomé and Príncipe",
+  "Senegal", "Seychelles", "Sierra Leone", "Somalia", "South Africa", "South Sudan",
+  "Sudan", "Tanzania", "Togo", "Tunisia", "Uganda", "Zambia", "Zimbabwe",
+  // Other regions
+  "United Kingdom", "United States", "Europe", "Asia", "Other",
 ];
 
 const Login = () => {
@@ -178,7 +187,7 @@ const Login = () => {
                     <label className="block text-sm font-medium text-foreground mb-1.5">Province / State</label>
                     <input
                       type="text"
-                      placeholder="e.g. Lagos, Western Cape, California"
+                      placeholder="e.g. Enugu, Nairobi, Kampala"
                       value={province}
                       onChange={(e) => setProvince(e.target.value)}
                       required
