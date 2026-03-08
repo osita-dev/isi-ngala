@@ -38,7 +38,13 @@ const Create = () => {
       toast.error("Please write something to share!");
       return;
     }
-    toast.success("Post shared! 🎉");
+    const newPostId = "post-" + Date.now();
+    toast.success("Post shared! 🎉", {
+      action: {
+        label: "View",
+        onClick: () => navigate(`/post/${newPostId}`),
+      },
+    });
     setCaption("");
     setHairType("");
     setTags("");
