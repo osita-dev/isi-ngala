@@ -1,22 +1,34 @@
 import { useState } from "react";
-import { Camera, Image as ImageIcon, X } from "lucide-react";
+import { Camera, Video, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { toast } from "sonner";
+
+const MAX_FILE_SIZE_MB = 100;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 const Create = () => {
   const [caption, setCaption] = useState("");
   const [hairType, setHairType] = useState("");
   const [tags, setTags] = useState("");
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [mediaPreview, setMediaPreview] = useState<string | null>(null);
+  const [mediaType, setMediaType] = useState<"image" | "video" | null>(null);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result as string);
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      toast.error(`File too large! Maximum size is ${MAX_FILE_SIZE_MB}MB.`);
+      return;
     }
+
+    const isVideo = file.type.startsWith("video/");
+    setMediaType(isVideo ? "video" : "image");
+
+    const reader = new FileReader();
+    reader.onloadend = () => setMediaPreview(reader.result as string);
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = () => {
@@ -28,7 +40,8 @@ const Create = () => {
     setCaption("");
     setHairType("");
     setTags("");
-    setImagePreview(null);
+    setMediaPreview(null);
+    setMediaType(null);
   };
 
   return (
@@ -41,12 +54,16 @@ const Create = () => {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-5"
         >
-          {/* Upload area (optional) */}
-          {imagePreview ? (
+          {/* Upload area */}
+          {mediaPreview ? (
             <div className="relative rounded-2xl overflow-hidden">
-              <img src={imagePreview} alt="Preview" className="w-full object-cover max-h-96 rounded-2xl" />
+              {mediaType === "video" ? (
+                <video src={mediaPreview} controls className="w-full max-h-96 rounded-2xl" />
+              ) : (
+                <img src={mediaPreview} alt="Preview" className="w-full object-cover max-h-96 rounded-2xl" />
+              )}
               <button
-                onClick={() => setImagePreview(null)}
+                onClick={() => { setMediaPreview(null); setMediaType(null); }}
                 className="absolute top-3 right-3 w-8 h-8 rounded-full bg-background/80 flex items-center justify-center"
               >
                 <X size={16} className="text-foreground" />
@@ -54,13 +71,18 @@ const Create = () => {
             </div>
           ) : (
             <label className="aspect-video rounded-2xl border-2 border-dashed border-border bg-card flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-primary/40 transition-colors">
-              <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
-                <Camera size={28} className="text-muted-foreground" />
+              <input type="file" accept="image/*,video/*" className="hidden" onChange={handleMediaUpload} />
+              <div className="flex items-center gap-3">
+                <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center">
+                  <Camera size={26} className="text-muted-foreground" />
+                </div>
+                <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center">
+                  <Video size={26} className="text-muted-foreground" />
+                </div>
               </div>
               <div className="text-center">
-                <p className="text-sm font-semibold text-foreground">Add a photo (optional)</p>
-                <p className="text-xs text-muted-foreground mt-1">You can also just share your thoughts</p>
+                <p className="text-sm font-semibold text-foreground">Add a photo or video</p>
+                <p className="text-xs text-muted-foreground mt-1">Max {MAX_FILE_SIZE_MB}MB · Any length</p>
               </div>
             </label>
           )}
