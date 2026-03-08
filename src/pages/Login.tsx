@@ -12,6 +12,12 @@ const interests = [
   "Product Reviews", "Heat-Free Styling", "Coloring Natural Hair",
 ];
 
+const countries = [
+  "Nigeria", "South Africa", "Kenya", "Ghana", "Tanzania", "Ethiopia",
+  "Uganda", "Cameroon", "Senegal", "Côte d'Ivoire", "Zimbabwe", "Mozambique",
+  "United States", "United Kingdom", "Canada", "Jamaica", "Brazil", "Other",
+];
+
 const Login = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -23,6 +29,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [username, setUsername] = useState("");
+  const [country, setCountry] = useState("");
+  const [province, setProvince] = useState("");
+  const [is16Plus, setIs16Plus] = useState(false);
 
   useEffect(() => {
     if (searchParams.get("signup") === "true") setIsSignUp(true);
@@ -36,7 +45,15 @@ const Login = () => {
 
   const handleSignupNext = (e: React.FormEvent) => {
     e.preventDefault();
-    updateSignupData({ email, password, displayName, username });
+    updateSignupData({
+      email,
+      password,
+      displayName,
+      username,
+      country,
+      province,
+      isMinor: !is16Plus,
+    });
     setSignupStep(1);
   };
 
@@ -139,6 +156,54 @@ const Login = () => {
                       </button>
                     </div>
                   </div>
+
+                  {/* Country */}
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-1.5">Country</label>
+                    <select
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      required
+                      className="w-full px-4 py-3 rounded-xl bg-background border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    >
+                      <option value="">Select your country</option>
+                      {countries.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Province / State */}
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-1.5">Province / State</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Lagos, Western Cape, California"
+                      value={province}
+                      onChange={(e) => setProvince(e.target.value)}
+                      required
+                      className="w-full px-4 py-3 rounded-xl bg-background border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    />
+                  </div>
+
+                  {/* Age Confirmation */}
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={is16Plus}
+                      onChange={(e) => setIs16Plus(e.target.checked)}
+                      className="mt-0.5 w-4 h-4 rounded border-border text-primary focus:ring-primary/30"
+                    />
+                    <span className="text-sm text-foreground leading-snug">
+                      I confirm that I am <strong>16 years or older</strong>
+                    </span>
+                  </label>
+                  {!is16Plus && (
+                    <p className="text-xs text-muted-foreground -mt-2 ml-7">
+                      Under 16? You can still join but won't have access to Marketplace or Messages.
+                    </p>
+                  )}
+
                   <button type="submit" className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
                     Continue <ArrowRight size={16} />
                   </button>
