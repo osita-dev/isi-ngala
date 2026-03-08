@@ -1,22 +1,34 @@
 import { useState } from "react";
-import { Camera, Image as ImageIcon, X } from "lucide-react";
+import { Camera, Video, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { toast } from "sonner";
+
+const MAX_FILE_SIZE_MB = 100;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 const Create = () => {
   const [caption, setCaption] = useState("");
   const [hairType, setHairType] = useState("");
   const [tags, setTags] = useState("");
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [mediaPreview, setMediaPreview] = useState<string | null>(null);
+  const [mediaType, setMediaType] = useState<"image" | "video" | null>(null);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result as string);
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      toast.error(`File too large! Maximum size is ${MAX_FILE_SIZE_MB}MB.`);
+      return;
     }
+
+    const isVideo = file.type.startsWith("video/");
+    setMediaType(isVideo ? "video" : "image");
+
+    const reader = new FileReader();
+    reader.onloadend = () => setMediaPreview(reader.result as string);
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = () => {
