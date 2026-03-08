@@ -32,7 +32,7 @@ const Landing = () => {
               to="/login?signup=true"
               className="px-5 py-2 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
             >
-              Join Free
+              Join
             </Link>
           </div>
         </div>
