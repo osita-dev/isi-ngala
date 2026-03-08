@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Search, Star, TrendingUp, Sparkles, MapPin, Users, ShoppingBag } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { Search, Star, TrendingUp, Sparkles, MapPin, Users, ShoppingBag, ShieldAlert } from "lucide-react";
 import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { products, categories, type Product } from "@/data/mockMarketplace";
+import { useAuthStore } from "@/stores/authStore";
 
 const sectionFilters = [
   { key: "trending", label: "Trending", icon: TrendingUp },
