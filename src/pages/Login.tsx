@@ -12,6 +12,12 @@ const interests = [
   "Product Reviews", "Heat-Free Styling", "Coloring Natural Hair",
 ];
 
+const countries = [
+  "Nigeria", "South Africa", "Kenya", "Ghana", "Tanzania", "Ethiopia",
+  "Uganda", "Cameroon", "Senegal", "Côte d'Ivoire", "Zimbabwe", "Mozambique",
+  "United States", "United Kingdom", "Canada", "Jamaica", "Brazil", "Other",
+];
+
 const Login = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -23,6 +29,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [username, setUsername] = useState("");
+  const [country, setCountry] = useState("");
+  const [province, setProvince] = useState("");
+  const [is16Plus, setIs16Plus] = useState(false);
 
   useEffect(() => {
     if (searchParams.get("signup") === "true") setIsSignUp(true);
@@ -36,7 +45,15 @@ const Login = () => {
 
   const handleSignupNext = (e: React.FormEvent) => {
     e.preventDefault();
-    updateSignupData({ email, password, displayName, username });
+    updateSignupData({
+      email,
+      password,
+      displayName,
+      username,
+      country,
+      province,
+      isMinor: !is16Plus,
+    });
     setSignupStep(1);
   };
 
