@@ -83,6 +83,27 @@ const Marketplace = () => {
     return matchSearch && matchCategory && matchSection;
   });
 
+  const { isMinor } = useAuthStore();
+
+  if (isMinor) {
+    return (
+      <AppLayout>
+        <div className="max-w-md mx-auto px-4 py-20 text-center">
+          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+            <ShieldAlert size={32} className="text-muted-foreground" />
+          </div>
+          <h1 className="font-display text-xl font-bold text-foreground mb-2">Access Restricted</h1>
+          <p className="text-sm text-muted-foreground mb-6">
+            The Marketplace is only available to members aged 16 and above.
+          </p>
+          <Link to="/feed" className="text-sm text-primary font-semibold hover:underline">
+            ← Back to Feed
+          </Link>
+        </div>
+      </AppLayout>
+    );
+  }
+
   return (
     <AppLayout>
       <div className="max-w-2xl mx-auto px-4 py-4 pb-24 md:pb-8">

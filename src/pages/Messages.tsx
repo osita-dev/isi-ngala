@@ -1,11 +1,38 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Send, MoreVertical } from "lucide-react";
+import { ArrowLeft, Send, MoreVertical, ShieldAlert } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { conversations, Conversation, Message } from "@/data/mockMessages";
 import { formatDistanceToNow } from "date-fns";
+import { useAuthStore } from "@/stores/authStore";
 
 const Messages = () => {
+  const { isMinor } = useAuthStore();
+  const [activeConv, setActiveConv] = useState<Conversation | null>(null);
+  const [newMessage, setNewMessage] = useState("");
+  const [localConversations, setLocalConversations] = useState(conversations);
+
+  const currentUserId = "1";
+
+  if (isMinor) {
+    return (
+      <AppLayout>
+        <div className="max-w-md mx-auto px-4 py-20 text-center">
+          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+            <ShieldAlert size={32} className="text-muted-foreground" />
+          </div>
+          <h1 className="font-display text-xl font-bold text-foreground mb-2">Access Restricted</h1>
+          <p className="text-sm text-muted-foreground mb-6">
+            Messages are only available to members aged 16 and above.
+          </p>
+          <Link to="/feed" className="text-sm text-primary font-semibold hover:underline">
+            ← Back to Feed
+          </Link>
+        </div>
+      </AppLayout>
+    );
+  }
   const [activeConv, setActiveConv] = useState<Conversation | null>(null);
   const [newMessage, setNewMessage] = useState("");
   const [localConversations, setLocalConversations] = useState(conversations);
