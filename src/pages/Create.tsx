@@ -9,6 +9,7 @@ const MAX_FILE_SIZE_MB = 100;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 const Create = () => {
+  const navigate = useNavigate();
   const [caption, setCaption] = useState("");
   const [hairType, setHairType] = useState("");
   const [tags, setTags] = useState("");
