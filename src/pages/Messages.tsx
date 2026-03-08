@@ -33,11 +33,6 @@ const Messages = () => {
       </AppLayout>
     );
   }
-  const [activeConv, setActiveConv] = useState<Conversation | null>(null);
-  const [newMessage, setNewMessage] = useState("");
-  const [localConversations, setLocalConversations] = useState(conversations);
-
-  const currentUserId = "1";
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
