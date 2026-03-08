@@ -187,7 +187,7 @@ const Login = () => {
                     <label className="block text-sm font-medium text-foreground mb-1.5">Province / State</label>
                     <input
                       type="text"
-                      placeholder="e.g. Lagos, Western Cape, California"
+                      placeholder="e.g. Enugu, Nairobi, Kampala"
                       value={province}
                       onChange={(e) => setProvince(e.target.value)}
                       required
