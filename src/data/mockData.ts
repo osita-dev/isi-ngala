@@ -5,6 +5,13 @@ import ujucurly from "@/assets/ujucurly.jpeg";
 import adaorig from "@/assets/adaorig.jpeg";
 import cornrow from "@/assets/cornrow.jpeg";
 import uju from "@/assets/uju.jpeg";
+import braids1 from "@/assets/braids1.png";
+import braids2 from "@/assets/braids2.png";
+import braids3 from "@/assets/braids3.png";
+import braids4 from "@/assets/braids4.png";
+import braids5 from "@/assets/braids5.png";
+import braids6 from "@/assets/braids6.png";
+import braids7 from "@/assets/braids7.png";
 
 export interface User {
   id: string;
