@@ -5,6 +5,13 @@ import ujucurly from "@/assets/ujucurly.jpeg";
 import adaorig from "@/assets/adaorig.jpeg";
 import cornrow from "@/assets/cornrow.jpeg";
 import uju from "@/assets/uju.jpeg";
+import braids1 from "@/assets/braids1.png";
+import braids2 from "@/assets/braids2.png";
+import braids3 from "@/assets/braids3.png";
+import braids4 from "@/assets/braids4.png";
+import braids5 from "@/assets/braids5.png";
+import braids6 from "@/assets/braids6.png";
+import braids7 from "@/assets/braids7.png";
 
 export interface User {
   id: string;
@@ -156,6 +163,16 @@ export const trendingTags = [
   "wash-day", "4C-curls", "protective-style", "twist-out",
   "cornrows", "afro", "natural-hair", "hair-growth",
   "shea-butter", "loc-journey", "braids", "silk-press",
+];
+
+export const braidsPosts = [
+  { id: "b1", image: braids1, caption: "Blonde knotless braids ✨", likes: 389, tags: ["braids", "knotless", "blonde"] },
+  { id: "b2", image: braids2, caption: "Ghana weaving updo 👑", likes: 512, tags: ["braids", "ghana-weaving", "updo"] },
+  { id: "b3", image: braids3, caption: "Short box braids bob 🔥", likes: 274, tags: ["braids", "box-braids", "bob"] },
+  { id: "b4", image: braids4, caption: "Knotless braids with curly ends", likes: 341, tags: ["braids", "knotless", "curly-ends"] },
+  { id: "b5", image: braids5, caption: "Passion twists ponytail 💫", likes: 298, tags: ["braids", "passion-twists", "ponytail"] },
+  { id: "b6", image: braids6, caption: "Bob braids with beads 🧡", likes: 425, tags: ["braids", "bob-braids", "beads"] },
+  { id: "b7", image: braids7, caption: "Sleek cornrow updo ✨", likes: 367, tags: ["braids", "cornrows", "sleek"] },
 ];
 
 export const hairCategories = [
