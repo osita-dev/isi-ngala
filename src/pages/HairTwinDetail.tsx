@@ -49,8 +49,8 @@ const HairTwinDetail = () => {
   const handleShare = useCallback(async () => {
     if (!twin) return;
     const shareData = {
-      title: `My Hair Twin on Isi Ngala!`,
-      text: `I'm a ${percentage}% match with ${twin.displayName}! We share ${twin.sharedTraits.join(", ")}. Find your Hair Twin on Isi Ngala 🌿`,
+      title: `My Hair Twin on Termii!`,
+      text: `I'm a ${percentage}% match with ${twin.displayName}! We share ${twin.sharedTraits.join(", ")}. Find your Hair Twin on Termii 🌿`,
       url: window.location.href,
     };
     try {
@@ -221,7 +221,7 @@ const HairTwinDetail = () => {
                 className="bg-warm-brown rounded-xl p-5 text-warm-brown-foreground mb-4"
               >
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="font-display text-lg font-bold">Isi Ngala</span>
+                  <span className="font-display text-lg font-bold">Termii</span>
                   <span className="text-xs opacity-60">Hair Twin Match</span>
                 </div>
                 <Separator className="bg-warm-brown-foreground/20 mb-3" />
