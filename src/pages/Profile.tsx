@@ -4,6 +4,7 @@ import { Settings, Grid3X3, Bookmark, Camera, X } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { users, posts } from "@/data/mockData";
 import { Link } from "react-router-dom";
+import { useSavedStore } from "@/stores/savedStore";
 import {
   Dialog,
   DialogContent,
@@ -26,6 +27,11 @@ const Profile = () => {
   const [avatar, setAvatar] = useState(users[0].avatar);
 
   const userPosts = posts.filter((p) => p.userId === users[0].id);
+  const { savedIds } = useSavedStore();
+  const savedPosts = savedIds
+    .map((id) => posts.find((p) => p.id === id))
+    .filter((p): p is (typeof posts)[number] => Boolean(p));
+  const visiblePosts = tab === "posts" ? userPosts : savedPosts;
 
   const handleSave = () => {
     // In a real app this would call the API
@@ -85,25 +91,41 @@ const Profile = () => {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-3 gap-1.5">
-          {userPosts.map((post, i) => (
-            <Link to={`/post/${post.id}`} key={post.id}>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: i * 0.08 }}
-                className="aspect-square rounded-md overflow-hidden cursor-pointer"
-              >
-                <img
-                  src={post.image}
-                  alt={post.caption}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
-                />
-              </motion.div>
-            </Link>
-          ))}
-        </div>
+        {visiblePosts.length === 0 ? (
+          <div className="text-center py-16 text-sm text-muted-foreground">
+            {tab === "saved"
+              ? "No saved posts yet. Tap the bookmark on any post to save it."
+              : "No posts yet."}
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-1.5">
+            {visiblePosts.map((post, i) => (
+              <Link to={`/post/${post.id}`} key={post.id}>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="aspect-square rounded-md overflow-hidden cursor-pointer bg-muted"
+                >
+                  {post.image ? (
+                    <img
+                      src={post.image}
+                      alt={post.caption}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full p-2 flex items-center justify-center">
+                      <p className="text-[10px] text-foreground line-clamp-6 leading-tight">
+                        {post.caption}
+                      </p>
+                    </div>
+                  )}
+                </motion.div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Edit Profile Dialog */}
