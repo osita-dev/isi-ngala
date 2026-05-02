@@ -58,7 +58,7 @@ export const useAuthStore = create<AuthState>()(
       resetSignup: () => set({ signupStep: 0, signupData: {} }),
     }),
     {
-      name: "isi-ngala-auth",
+      name: "termii-auth",
       partialize: (state) => ({
         user: state.user,
         isAuthenticated: state.isAuthenticated,
