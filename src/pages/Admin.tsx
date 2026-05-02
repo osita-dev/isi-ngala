@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Users, ShieldCheck, Flag, Ban, Search, ChevronRight,
   CheckCircle, XCircle, Clock, AlertTriangle, ExternalLink, ArrowLeft,
+  Image as ImageIcon, Upload, RotateCcw,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
@@ -19,14 +20,19 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
+import {
+  generateFaviconFromFile, loadStoredFavicon, clearFavicon,
+} from "@/lib/favicon";
 
-type AdminTab = "users" | "creators" | "flagged" | "suspend";
+type AdminTab = "users" | "creators" | "flagged" | "suspend" | "branding";
 
 const tabs: { value: AdminTab; label: string; icon: React.ElementType }[] = [
   { value: "users", label: "Users", icon: Users },
   { value: "creators", label: "Creators", icon: ShieldCheck },
   { value: "flagged", label: "Flagged", icon: Flag },
   { value: "suspend", label: "Suspend/Ban", icon: Ban },
+  { value: "branding", label: "Branding", icon: ImageIcon },
 ];
 
 const statusBadge: Record<UserStatus, { label: string; className: string }> = {
@@ -89,6 +95,7 @@ const AdminPanel = () => {
           {activeTab === "creators" && <CreatorsTab />}
           {activeTab === "flagged" && <FlaggedTab />}
           {activeTab === "suspend" && <SuspendBanTab />}
+          {activeTab === "branding" && <BrandingTab />}
         </motion.div>
       </div>
     </div>
@@ -469,6 +476,100 @@ const SuspendBanTab = () => {
           </div>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+};
+
+/* ====== BRANDING TAB ====== */
+const BrandingTab = () => {
+  const { toast } = useToast();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    setPreview(loadStoredFavicon());
+  }, []);
+
+  const onFile = async (file?: File | null) => {
+    if (!file) return;
+    setBusy(true);
+    try {
+      const dataUrl = await generateFaviconFromFile(file);
+      setPreview(dataUrl);
+      toast({ title: "Favicon updated", description: "The site icon has been regenerated and applied." });
+    } catch (e) {
+      toast({
+        title: "Couldn't update favicon",
+        description: e instanceof Error ? e.message : "Unknown error",
+        variant: "destructive",
+      });
+    } finally {
+      setBusy(false);
+      if (inputRef.current) inputRef.current.value = "";
+    }
+  };
+
+  const onReset = () => {
+    clearFavicon();
+    setPreview(null);
+    toast({ title: "Favicon reset", description: "Reverted to the default site icon." });
+  };
+
+  return (
+    <div className="max-w-xl">
+      <h2 className="font-display text-lg font-semibold text-foreground mb-1">Site Favicon</h2>
+      <p className="text-sm text-muted-foreground mb-6">
+        Upload an image to regenerate the favicon. It's center-cropped to a square and resized to 256×256.
+      </p>
+
+      <div className="bg-card border border-border rounded-2xl p-6">
+        <div className="flex items-center gap-5 mb-5">
+          <div className="w-20 h-20 rounded-xl bg-muted border border-border overflow-hidden flex items-center justify-center">
+            <img
+              src={preview ?? "/favicon.png"}
+              alt="Current favicon"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-foreground">Current icon</p>
+            <p className="text-xs text-muted-foreground">
+              {preview ? "Custom favicon (saved on this device)" : "Default favicon"}
+            </p>
+          </div>
+        </div>
+
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          className="hidden"
+          onChange={(e) => onFile(e.target.files?.[0])}
+        />
+
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => inputRef.current?.click()}
+            disabled={busy}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+          >
+            <Upload size={16} />
+            {busy ? "Processing..." : "Upload image"}
+          </button>
+          <button
+            onClick={onReset}
+            disabled={busy || !preview}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-secondary text-secondary-foreground text-sm font-semibold hover:bg-secondary/80 transition-colors disabled:opacity-40"
+          >
+            <RotateCcw size={16} /> Reset to default
+          </button>
+        </div>
+
+        <p className="text-xs text-muted-foreground mt-4">
+          Note: changes apply to your browser. Persisting the favicon for all visitors requires backend storage.
+        </p>
+      </div>
     </div>
   );
 };
