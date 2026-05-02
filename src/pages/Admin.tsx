@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Users, ShieldCheck, Flag, Ban, Search, ChevronRight,
   CheckCircle, XCircle, Clock, AlertTriangle, ExternalLink, ArrowLeft,
+  Image as ImageIcon, Upload, RotateCcw,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
@@ -19,14 +20,19 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
+import {
+  generateFaviconFromFile, loadStoredFavicon, clearFavicon,
+} from "@/lib/favicon";
 
-type AdminTab = "users" | "creators" | "flagged" | "suspend";
+type AdminTab = "users" | "creators" | "flagged" | "suspend" | "branding";
 
 const tabs: { value: AdminTab; label: string; icon: React.ElementType }[] = [
   { value: "users", label: "Users", icon: Users },
   { value: "creators", label: "Creators", icon: ShieldCheck },
   { value: "flagged", label: "Flagged", icon: Flag },
   { value: "suspend", label: "Suspend/Ban", icon: Ban },
+  { value: "branding", label: "Branding", icon: ImageIcon },
 ];
 
 const statusBadge: Record<UserStatus, { label: string; className: string }> = {
@@ -89,6 +95,7 @@ const AdminPanel = () => {
           {activeTab === "creators" && <CreatorsTab />}
           {activeTab === "flagged" && <FlaggedTab />}
           {activeTab === "suspend" && <SuspendBanTab />}
+          {activeTab === "branding" && <BrandingTab />}
         </motion.div>
       </div>
     </div>
