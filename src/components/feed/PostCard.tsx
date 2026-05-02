@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import type { Post } from "@/data/mockData";
 import { useFollowStore } from "@/stores/followStore";
 import { useBlockMuteStore } from "@/stores/blockMuteStore";
+import { useSavedStore } from "@/stores/savedStore";
+import { useToast } from "@/hooks/use-toast";
 import { BlockMuteMenu } from "@/components/user/BlockMuteMenu";
 import {
   Popover,
@@ -19,12 +21,22 @@ interface PostCardProps {
 
 export const PostCard = ({ post, index }: PostCardProps) => {
   const [liked, setLiked] = useState(post.liked ?? false);
-  const [saved, setSaved] = useState(post.saved ?? false);
   const [likeCount, setLikeCount] = useState(post.likes);
   const [menuOpen, setMenuOpen] = useState(false);
   const { isFollowing, toggleFollow } = useFollowStore();
   const { isBlocked } = useBlockMuteStore();
+  const { isSaved, toggleSaved } = useSavedStore();
+  const { toast } = useToast();
   const following = isFollowing(post.userId);
+  const saved = isSaved(post.id);
+
+  const handleSave = () => {
+    toggleSaved(post.id);
+    toast({
+      title: saved ? "Removed from saved" : "Saved",
+      description: saved ? "Post removed from your saved list." : "Find it in Profile → Saved.",
+    });
+  };
 
   if (isBlocked(post.userId)) return null;
 
@@ -116,7 +128,7 @@ export const PostCard = ({ post, index }: PostCardProps) => {
               <Share2 size={22} className="text-foreground" strokeWidth={1.5} />
             </button>
           </div>
-          <button onClick={() => setSaved(!saved)} className="transition-transform active:scale-110">
+          <button onClick={handleSave} aria-label={saved ? "Unsave post" : "Save post"} className="transition-transform active:scale-110">
             <Bookmark
               size={24}
               className={saved ? "fill-primary text-primary" : "text-foreground"}
