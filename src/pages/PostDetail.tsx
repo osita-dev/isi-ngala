@@ -100,13 +100,23 @@ const PostDetail = () => {
             {/* Actions */}
             <div className="flex items-center justify-between mb-4 pb-4 border-b border-border">
               <div className="flex items-center gap-4">
-                <button onClick={handleLike} className="transition-transform active:scale-125">
+                <button onClick={handleLike} className="transition-transform active:scale-125" aria-label={liked ? "Unlike" : "Like"}>
                   <Heart size={24} className={liked ? "fill-terracotta text-terracotta" : "text-foreground"} strokeWidth={1.5} />
                 </button>
-                <MessageCircle size={24} className="text-foreground" strokeWidth={1.5} />
-                <Share2 size={22} className="text-foreground" strokeWidth={1.5} />
+                <button aria-label="Focus comments" onClick={() => document.getElementById(`comment-input-${post.id}`)?.focus()}>
+                  <MessageCircle size={24} className="text-foreground" strokeWidth={1.5} />
+                </button>
+                <button
+                  aria-label="Share post"
+                  onClick={() => {
+                    const url = `${window.location.origin}/post/${post.id}`;
+                    navigator.clipboard?.writeText(url).catch(() => {});
+                  }}
+                >
+                  <Share2 size={22} className="text-foreground" strokeWidth={1.5} />
+                </button>
               </div>
-              <button onClick={() => setSaved(!saved)}>
+              <button onClick={() => setSaved(!saved)} aria-label={saved ? "Unsave" : "Save"}>
                 <Bookmark size={24} className={saved ? "fill-primary text-primary" : "text-foreground"} strokeWidth={1.5} />
               </button>
             </div>
