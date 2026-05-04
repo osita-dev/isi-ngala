@@ -121,10 +121,17 @@ export const PostCard = ({ post, index }: PostCardProps) => {
                 strokeWidth={1.5}
               />
             </button>
-            <button>
+            <Link to={`/post/${post.id}`} aria-label="View comments">
               <MessageCircle size={24} className="text-foreground" strokeWidth={1.5} />
-            </button>
-            <button>
+            </Link>
+            <button
+              onClick={() => {
+                const url = `${window.location.origin}/post/${post.id}`;
+                navigator.clipboard?.writeText(url).catch(() => {});
+                toast({ title: "Link copied", description: "Post link copied to clipboard." });
+              }}
+              aria-label="Share post"
+            >
               <Share2 size={22} className="text-foreground" strokeWidth={1.5} />
             </button>
           </div>
