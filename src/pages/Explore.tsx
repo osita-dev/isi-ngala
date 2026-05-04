@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Search, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { posts, trendingTags, hairCategories, braidsPosts } from "@/data/mockData";
 
