@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Search, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { posts, trendingTags, hairCategories, braidsPosts } from "@/data/mockData";
 
 const Explore = () => {
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
 
   const handleTagClick = (tag: string) => {
     setActiveTag(activeTag === tag ? null : tag);
@@ -21,11 +23,22 @@ const Explore = () => {
 
   // Get filtered content
   const getFilteredPosts = () => {
-    if (!activeTag) return posts;
-    if (activeTag === "braids" || activeTag === "cornrows") {
-      return []; // braids have their own grid
+    let list = posts;
+    if (activeTag) {
+      if (activeTag === "braids" || activeTag === "cornrows") return [];
+      list = list.filter((p) => p.tags.some((t) => t.includes(activeTag)));
     }
-    return posts.filter((p) => p.tags.some((t) => t.includes(activeTag)));
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter(
+        (p) =>
+          p.caption.toLowerCase().includes(q) ||
+          p.tags.some((t) => t.toLowerCase().includes(q)) ||
+          p.hairType.toLowerCase().includes(q) ||
+          p.user.displayName.toLowerCase().includes(q)
+      );
+    }
+    return list;
   };
 
   const showBraids = activeTag === "braids" || activeTag === "cornrows";
@@ -50,6 +63,8 @@ const Explore = () => {
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search styles, hair types, techniques..."
             className="w-full pl-10 pr-4 py-3 rounded-xl bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
           />
@@ -101,25 +116,26 @@ const Explore = () => {
             <h2 className="font-display text-lg font-semibold text-foreground mb-3">Braids & Cornrows</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-8">
               {braidsPosts.map((post, i) => (
-                <motion.div
-                  key={post.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: i * 0.08 }}
-                  className="aspect-square rounded-lg overflow-hidden cursor-pointer relative group"
-                >
-                  <img
-                    src={post.image}
-                    alt={post.caption}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/30 transition-colors flex items-center justify-center">
-                    <p className="text-primary-foreground opacity-0 group-hover:opacity-100 text-sm font-semibold transition-opacity">
-                      ♥ {post.likes}
-                    </p>
-                  </div>
-                </motion.div>
+                <Link key={post.id} to={`/post/${post.id}`}>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: i * 0.08 }}
+                    className="aspect-square rounded-lg overflow-hidden cursor-pointer relative group"
+                  >
+                    <img
+                      src={post.image}
+                      alt={post.caption}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/30 transition-colors flex items-center justify-center">
+                      <p className="text-primary-foreground opacity-0 group-hover:opacity-100 text-sm font-semibold transition-opacity">
+                        ♥ {post.likes}
+                      </p>
+                    </div>
+                  </motion.div>
+                </Link>
               ))}
             </div>
           </>
@@ -133,31 +149,32 @@ const Explore = () => {
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {filteredPosts.map((post, i) => (
-                <motion.div
-                  key={post.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: i * 0.08 }}
-                  className="aspect-square rounded-lg overflow-hidden cursor-pointer relative group"
-                >
-                  {post.image ? (
-                    <img
-                      src={post.image}
-                      alt={post.caption}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-muted flex items-center justify-center p-4">
-                      <p className="text-sm text-foreground text-center line-clamp-4">{post.caption}</p>
+                <Link key={post.id} to={`/post/${post.id}`}>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: i * 0.08 }}
+                    className="aspect-square rounded-lg overflow-hidden cursor-pointer relative group"
+                  >
+                    {post.image ? (
+                      <img
+                        src={post.image}
+                        alt={post.caption}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-muted flex items-center justify-center p-4">
+                        <p className="text-sm text-foreground text-center line-clamp-4">{post.caption}</p>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/30 transition-colors flex items-center justify-center">
+                      <p className="text-primary-foreground opacity-0 group-hover:opacity-100 text-sm font-semibold transition-opacity">
+                        ♥ {post.likes}
+                      </p>
                     </div>
-                  )}
-                  <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/30 transition-colors flex items-center justify-center">
-                    <p className="text-primary-foreground opacity-0 group-hover:opacity-100 text-sm font-semibold transition-opacity">
-                      ♥ {post.likes}
-                    </p>
-                  </div>
-                </motion.div>
+                  </motion.div>
+                </Link>
               ))}
             </div>
           </>
