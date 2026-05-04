@@ -149,31 +149,32 @@ const Explore = () => {
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {filteredPosts.map((post, i) => (
-                <motion.div
-                  key={post.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: i * 0.08 }}
-                  className="aspect-square rounded-lg overflow-hidden cursor-pointer relative group"
-                >
-                  {post.image ? (
-                    <img
-                      src={post.image}
-                      alt={post.caption}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-muted flex items-center justify-center p-4">
-                      <p className="text-sm text-foreground text-center line-clamp-4">{post.caption}</p>
+                <Link key={post.id} to={`/post/${post.id}`}>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: i * 0.08 }}
+                    className="aspect-square rounded-lg overflow-hidden cursor-pointer relative group"
+                  >
+                    {post.image ? (
+                      <img
+                        src={post.image}
+                        alt={post.caption}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-muted flex items-center justify-center p-4">
+                        <p className="text-sm text-foreground text-center line-clamp-4">{post.caption}</p>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/30 transition-colors flex items-center justify-center">
+                      <p className="text-primary-foreground opacity-0 group-hover:opacity-100 text-sm font-semibold transition-opacity">
+                        ♥ {post.likes}
+                      </p>
                     </div>
-                  )}
-                  <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/30 transition-colors flex items-center justify-center">
-                    <p className="text-primary-foreground opacity-0 group-hover:opacity-100 text-sm font-semibold transition-opacity">
-                      ♥ {post.likes}
-                    </p>
-                  </div>
-                </motion.div>
+                  </motion.div>
+                </Link>
               ))}
             </div>
           </>
