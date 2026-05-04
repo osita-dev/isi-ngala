@@ -23,11 +23,22 @@ const Explore = () => {
 
   // Get filtered content
   const getFilteredPosts = () => {
-    if (!activeTag) return posts;
-    if (activeTag === "braids" || activeTag === "cornrows") {
-      return []; // braids have their own grid
+    let list = posts;
+    if (activeTag) {
+      if (activeTag === "braids" || activeTag === "cornrows") return [];
+      list = list.filter((p) => p.tags.some((t) => t.includes(activeTag)));
     }
-    return posts.filter((p) => p.tags.some((t) => t.includes(activeTag)));
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter(
+        (p) =>
+          p.caption.toLowerCase().includes(q) ||
+          p.tags.some((t) => t.toLowerCase().includes(q)) ||
+          p.hairType.toLowerCase().includes(q) ||
+          p.user.displayName.toLowerCase().includes(q)
+      );
+    }
+    return list;
   };
 
   const showBraids = activeTag === "braids" || activeTag === "cornrows";
