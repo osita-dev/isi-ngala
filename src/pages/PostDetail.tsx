@@ -137,6 +137,7 @@ const PostDetail = () => {
             {/* Add comment */}
             <form onSubmit={handleComment} className="flex items-center gap-2 pt-3 border-t border-border">
               <input
+                id={`comment-input-${post.id}`}
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Add a comment..."
