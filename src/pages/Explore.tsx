@@ -7,6 +7,7 @@ import { posts, trendingTags, hairCategories, braidsPosts } from "@/data/mockDat
 
 const Explore = () => {
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
 
   const handleTagClick = (tag: string) => {
     setActiveTag(activeTag === tag ? null : tag);
