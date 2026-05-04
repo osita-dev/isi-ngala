@@ -139,12 +139,24 @@ const Profile = () => {
           <div className="space-y-5 mt-2">
             {/* Avatar */}
             <div className="flex justify-center">
-              <div className="relative">
+              <label className="relative cursor-pointer">
                 <img src={avatar} alt="" className="w-20 h-20 rounded-full object-cover ring-2 ring-border" />
-                <button className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+                <span className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
                   <Camera size={14} />
-                </button>
-              </div>
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onloadend = () => setAvatar(reader.result as string);
+                    reader.readAsDataURL(file);
+                  }}
+                />
+              </label>
             </div>
 
             <div>
