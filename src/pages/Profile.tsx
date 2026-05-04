@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Settings, Grid3X3, Bookmark, Camera, X } from "lucide-react";
+import { Settings, Grid3X3, Bookmark, Camera } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { users, posts } from "@/data/mockData";
 import { Link } from "react-router-dom";
